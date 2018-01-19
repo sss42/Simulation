@@ -1,0 +1,79 @@
+Name:Sourav Chel
+Roll No:14MF10027
+Simulation Assignment no. 2
+
+%P=Reorder point
+%Q=Order quantity
+%D=Demand per day
+%D is EqiprobableE in the rangeOF 0 and 99 
+%Hence D is a Array of dimesion 100*1 with randonm intergers between 0 TO 99
+%S=In stock units
+
+P =[125,125,150,175,175];
+Q=[150,250,250,250,300];
+
+%Loss perunit out of cost
+LC = 18;
+
+%Ordering cost
+OC = 75;
+
+
+%Carrying cost = 0.75
+CC = 0.75;
+
+
+D = randi([0,99],180,1);
+
+%In stock units Let it be an Array of Zeros then we update each element at
+%The end of each day
+
+S=115;
+
+counter =-2;
+
+%Let the number of order is x
+x =0;
+
+%Total cost vector
+TC = zeros(5,1);
+
+for j = 1:5
+    
+    for i = 1:180
+
+        if(i> 3 && i == counter + 3)
+            S = S + Q(j);
+        end 
+
+        if (S>D(i))
+            TC(j) = TC(j) + (-D(i)+S)*CC;
+            S=S-D(i);
+
+        else
+            TC(j) =TC(j) + (D(i)-S)*LC;
+            S=0;
+
+        end 
+
+
+
+        if (S <= P(j) && i >= counter + 3)
+                %Order is placed if i is greater than counter +3
+
+                TC(j) =TC(j) + OC;
+
+                counter = i;
+                x=x+1;
+         end 
+
+
+    end 
+
+end 
+
+T_cost = transpose(TC);
+[minTC,I] = min(TC);
+
+N = ['The Best Policy which Minimizes the total relevant cost  is ' num2str(I(1))];
+disp(N);
